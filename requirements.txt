@@ -1,0 +1,8 @@
+# PDF Processing (Used to detect bold font flags and coordinates)
+pymupdf>=1.23.0
+
+# Natural Language Processing (Optional: Helps in splitting text into clean sentences)
+spacy>=3.7.0
+
+# UI/Game Elements (Optional: If you want a graphical interface instead of terminal)
+pygame>=2.5.0
