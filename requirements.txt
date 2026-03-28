@@ -6,3 +6,6 @@ spacy>=3.7.0
 
 # UI/Game Elements (Optional: If you want a graphical interface instead of terminal)
 pygame>=2.5.0
+
+pymupdf>=1.23.0
+streamlit
