@@ -17,7 +17,7 @@ def extract_data(pdf_path):
         (131, 160),  # Ch 6
         (161, 169),  # Ch 7
         (249, 300),  # Ch 12
-        (443, 593)   # Ch 26-34
+        (441, 615)   # Ch 26-34
     ]
 
     for start, end in target_ranges:
