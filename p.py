@@ -1,3 +1,4 @@
+#py -3.12 -m streamlit run app.py
 import fitz  # PyMuPDF
 import random
 import json
