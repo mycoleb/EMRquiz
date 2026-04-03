@@ -33,7 +33,7 @@ def extract_data(pdf_path):
                             surrounding = full_text[context_start:context_end].replace('\n', ' ')
                             
                             if term in surrounding:
-                                question = surrounding.replace(term, "____")
+                                question = surrounding.replace(term, "____", 1)
                                 quiz_items.append({"answer": term, "question": question})
     return quiz_items
 

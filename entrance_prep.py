@@ -19,7 +19,10 @@ def extract_data(pdf_path):
         (249, 300),  # Ch 12
         (441, 615)   # Ch 26-34
     ]
-
+    if term in surrounding:
+        # The '1' tells Python to only replace the first occurrence
+        question = surrounding.replace(term, "____", 1) 
+    quiz_items.append({"answer": term, "question": question})
     for start, end in target_ranges:
         # Ensure we don't exceed PDF length
         actual_end = min(end, len(doc))
@@ -59,11 +62,18 @@ if 'entrance_data' not in st.session_state:
         with open("entrance_prep_data.json", "r") as f:
             st.session_state.entrance_data = json.load(f)
     else:
-        with st.spinner("Extracting exam-specific terms..."):
-            data = extract_data("workbook.pdf")
-            st.session_state.entrance_data = data
-            with open("entrance_prep_data.json", "w") as f:
-                json.dump(data, f)
+        if os.path.exists("workbook.pdf"):
+            with st.spinner("Analyzing Exam Chapters..."):
+                data = extract_data("workbook.pdf")
+                if not data:
+                    st.error("Extraction finished, but NO bolded terms were found in those page ranges!")
+                    st.stop()
+                st.session_state.entrance_data = data
+                with open("entrance_prep_data.json", "w") as f:
+                    json.dump(data, f)
+        else:
+            st.error("CRITICAL: 'workbook.pdf' not found in the current folder.")
+            st.stop()
 
 # Initialize Game State (Standard Streamlit Quiz Logic)
 if 'current_q' not in st.session_state:
@@ -74,3 +84,23 @@ if 'current_q' not in st.session_state:
     random.shuffle(options)
     st.session_state.options = options
     st.session_state.answered = False
+# --- UI Display ---
+q = st.session_state.current_q
+st.info(f"**Context:** ...{q['question']}...")
+
+with st.form("quiz_form"):
+    choice = st.radio("Select the correct bolded term:", st.session_state.options)
+    submit = st.form_submit_button("Submit Answer")
+
+if submit:
+    st.session_state.answered = True
+    if choice == q['answer']:
+        st.success(f"Correct! The answer is **{q['answer']}**.")
+    else:
+        st.error(f"Not quite. The correct answer was **{q['answer']}**.")
+
+if st.session_state.answered:
+    if st.button("Next Question"):
+        # Reset for a new question
+        del st.session_state.current_q
+        st.rerun()

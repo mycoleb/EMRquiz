@@ -40,7 +40,7 @@ def extract_and_save_data(pdf_path, json_path):
                             surrounding_context = full_text[context_start:context_end].replace('\n', ' ')
                             
                             if term in surrounding_context:
-                                question = surrounding_context.replace(term, "__________")
+                                question = surrounding_context.replace(term, "__________", 1)
                                 quiz_items.append({"answer": term, "question": question})
                                 
     with open(json_path, 'w') as f:
