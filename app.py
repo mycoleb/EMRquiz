@@ -10,7 +10,7 @@ st.set_page_config(page_title="EMR Study Quiz", page_icon="🚑")
 def extract_data(pdf_path):
     doc = fitz.open(pdf_path)
     quiz_items = []
-    # Using your preference: skipping first 30 pages
+    # skipping first 30 pages
     for page_num in range(30, len(doc) - 20):
         page = doc[page_num]
         blocks = page.get_text("dict")["blocks"]
