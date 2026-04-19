@@ -12,7 +12,7 @@ def extract_data(pdf_path):
     quiz_items = []
     
     # Define the page ranges for Chapters 6, 7, 12, and 26-34
-    # Note: Fitz uses 0-based indexing. Adding a small buffer for end pages.
+    # Fitz uses 0-based indexing. Adding a small buffer for end pages.
     target_ranges = [
         (131, 160),  # Ch 6
         (161, 169),  # Ch 7
