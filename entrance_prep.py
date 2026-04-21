@@ -7,6 +7,41 @@ import os
 # Set the configuration
 st.set_page_config(page_title="Entrance Exam Prep", page_icon="🚑")
 
+def extract_table_quiz_data(pdf_path):
+    doc = fitz.open(pdf_path)
+    table_items = []
+    
+    # Iterate through pages likely to have medical tables
+    for page in doc:
+        tabs = page.find_tables()
+        for tab in tabs:
+            df = tab.to_pandas()
+            # Clean up empty rows/cols
+            df = df.dropna(how='all').dropna(axis=1, how='all')
+            
+            if df.empty or df.size < 4:
+                continue
+
+            # Pick a random cell that isn't empty and isn't a header
+            row_idx = random.randint(0, len(df) - 1)
+            col_idx = random.randint(0, len(df.columns) - 1)
+            correct_answer = str(df.iloc[row_idx, col_idx]).strip()
+
+            if len(correct_answer) < 3:
+                continue
+
+            # Create a "Blanked" version of the table for display
+            df_blanked = df.copy()
+            df_blanked.iloc[row_idx, col_idx] = "____[MISSING]____"
+            
+            # Store the question as a HTML table for Streamlit to render
+            table_html = df_blanked.to_html(index=False, classes='table table-striped')
+            table_items.append({
+                "answer": correct_answer,
+                "question": table_html,
+                "is_table": True
+            })
+    return table_items
 def extract_data(pdf_path):
     doc = fitz.open(pdf_path)
     quiz_items = []
